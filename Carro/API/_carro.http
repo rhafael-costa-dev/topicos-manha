@@ -9,7 +9,10 @@ POST http://localhost:5137/api/carros
 Content-Type: application/json
 
 {
-    "name": "Hundai HB20s"
+    "name": "Hundai HB20s",
+    "modelo": {
+        "id": 1
+    }
 }
 
 ### Atualiza os dados do Carro
@@ -17,7 +20,11 @@ PUT http://localhost:5137/api/carros/1
 Content-Type: application/json
 
 {
-    "name": "Honda City"
+    "name": "Honda City",
+    "modelo": {
+        "id": 1
+    }
+    
 }
 
 
