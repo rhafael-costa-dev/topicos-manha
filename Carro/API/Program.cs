@@ -1,11 +1,35 @@
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDataContext>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Swagger Documentação API Carros",
+        Description = "Endpoints para gerenciamente de cadastro de carros.",
+        Contact = new OpenApiContact() {
+            Name = "Rhafael Costa",
+            Email = "rhafael@up.edu.br"
+        },
+        License = new OpenApiLicense() {
+            Name = "MIT License",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        }
+    });
+});
+
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Endpoints relacionados ao recurso de Carros
 // GET: Lista todos os carros cadastrados
@@ -83,8 +107,16 @@ app.MapDelete("/api/carros/{id}", ([FromRoute] int id,
 });
 
 // GET: Lista todos os modelos cadastrados
-app.MapGet("/api/modelos", ([FromServices] AppDataContext ctx) => {
-    var modelos = ctx.Modelos.ToList();
+app.MapGet("/api/modelos", ([FromQuery] string? name,
+                            [FromServices] AppDataContext ctx) => {
+
+    var query = ctx.Modelos.AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(name)) {
+        query = query.Where(m => EF.Functions.Like(m.Name, $"%{name}%"));
+    }
+
+    var modelos = query.ToList();
     if (modelos == null || modelos.Count == 0) {
         return Results.NotFound();    
     }
