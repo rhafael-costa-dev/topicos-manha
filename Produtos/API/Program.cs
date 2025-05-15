@@ -5,23 +5,15 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDataContext>();
 
-// builder.Services.AddCors(options =>
-//     options.AddPolicy("Acesso Total",
-//         configs => configs
-//             .AllowAnyOrigin()
-//             .AllowAnyHeader()
-//             .AllowAnyMethod())
-// );
+builder.Services.AddCors(options =>
+    options.AddPolicy("Acesso Total",
+        configs => configs
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod())
+);
 
 var app = builder.Build();
-
-List<Produto> produtos =
-[
-    new Produto() { Nome = "Notebook", Preco = 5000, Quantidade = 54 },
-    new Produto() { Nome = "Desktop", Preco = 3500, Quantidade = 150 },
-    new Produto() { Nome = "Monitor", Preco = 1200, Quantidade = 15 },
-    new Produto() { Nome = "Caixa de Som", Preco = 650, Quantidade = 70 },
-];
 
 //EndPoints - Funcionalidades
 
@@ -140,6 +132,6 @@ app.MapPut("/api/produtos/{id}", ([FromRoute] string id,
     return Results.Ok(produto);
 });
 
-// app.UseCors("Acesso Total");
+app.UseCors("Acesso Total");
 
 app.Run();
