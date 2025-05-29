@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import './listar-produto-modulo.css';
 import { Produto } from '../../models/Produto';
+import { Link } from 'react-router-dom';
 
 
 function ListarProdutos() {
@@ -61,7 +62,9 @@ function ListarProdutos() {
                                         onClick={() => remover(produto.id)}>
                                     Remover
                                 </button>
-                                <button className="alterar">Alterar</button>
+                                <Link to={`/pages/produtos/alterar/${produto.id}`}>
+                                    Alterar
+                                </Link>
                             </td>
                         </tr>
                     ))}

@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import CadastrarProduto from "./pages/produtos/CadastrarProduto";
 import ListarProdutos from "./pages/produtos/ListarProdutos";
@@ -8,11 +9,16 @@ function App() {
 
   return (
     <div>
-      <Header />
-
-      <ListarProdutos />
-      <CadastrarProduto />
-      
+      <BrowserRouter>
+        <Header />
+        
+        <Routes>
+          <Route path="/" element={<ListarProdutos />} />
+          <Route path="/pages/produtos/listar" element={<ListarProdutos />} />
+          <Route path="/pages/produtos/cadastrar" element={<CadastrarProduto />} />
+          <Route path="/pages/produtos/alterar/:id" element={<CadastrarProduto />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

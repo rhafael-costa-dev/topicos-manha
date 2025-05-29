@@ -1,10 +1,12 @@
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Categoria } from '../../models/Categoria';
 import './cadastrar-produto-modulo.css';
-import { error } from 'console';
 
 function CadastrarProduto() {
+    const { id } = useParams();
+
     const [nome, setNome] = useState("");
     const [preco, setPreco] = useState<number>(0);
     const [descricao, setDescricao] = useState("");
@@ -13,13 +15,15 @@ function CadastrarProduto() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
 
     useEffect(() => {
-        const id = "91520a04-598f-4629-bd64-6f25f1e2e20a";
         carregarCategorias();
         buscarProdutoPorId(id);
     }, []);
 
-    function buscarProdutoPorId(id: string) {
-        
+    function buscarProdutoPorId(id: any) {
+        if (id == null) {
+            return;
+        }
+
         axios.get(`http://localhost:5291/api/produtos/${id}`)
         .then( response =>{
             var produto = response.data;
@@ -55,8 +59,14 @@ function CadastrarProduto() {
             quantidade: Number(quantidade),
             categoriaId: categoriaId
         }
-        console.log(p);
-        cadastrar(p);
+        
+        if (id == null) {
+            cadastrar(p);
+        } else {
+            alterar(id, p);
+        }
+
+        
     }
 
     function cadastrar(produto: any) {
@@ -67,6 +77,17 @@ function CadastrarProduto() {
         })
         .catch( error => {
             alert("Ocorreu um erro ao cadastrar o produtos");
+        })
+    }
+
+    function alterar(id: any, produto: any) {
+        axios.put(`http://localhost:5291/api/produtos/${id}`, produto)
+        .then(response => {
+            console.log(response);
+            alert("Produto alterado com sucessor");
+        })
+        .catch( error => {
+            alert("Ocorreu um erro ao alterar o produtos");
         })
     }
 
